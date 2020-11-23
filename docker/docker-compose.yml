@@ -1,0 +1,37 @@
+version: '3'
+services:
+  php:
+    container_name: PHP
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./index:/var/www/html/index
+      - ./php:/var/www/html/php
+    ports:
+      - "80:80"
+    depends_on:
+      - mysql
+    tty: true 
+    # network_mode: "sample-network" # 上で作成したカスタムネットワークの名前を記載する
+
+  mysql:
+    container_name: DB
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_DATABASE: test
+      MYSQL_ROOT_USER: test
+      MYSQL_PASSWORD: test
+    volumes:
+      # MySQLの設定ファイル
+      - ./db/mysql_conf:/etc/mysql/conf.d
+      # SQLファイル
+      - ./db/table.sql:/etc/mysql/table.sql
+    # network_mode: "sample-network"
+
+# networks:
+  # sample-network:
